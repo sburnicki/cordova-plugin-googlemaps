@@ -370,12 +370,12 @@ if (!cordova) {
         // Stop timer when user does not touch the app and no changes are occurred during 1500ms.
         // (50ms * 5times + 200ms * 5times).
         // This save really the battery life significantly.
-        if (idlingCnt < 10) {
-          if (idlingCnt === 8) {
-            cordova.fireDocumentEvent("ecocheck", {});
-          }
-          setTimeout(putHtmlElements, idlingCnt < 5 ? 50 : 200);
-        }
+        // if (idlingCnt < 10) {
+          // if (idlingCnt === 8) {
+          //   cordova.fireDocumentEvent("ecocheck", {});
+          // }
+          // setTimeout(putHtmlElements, idlingCnt < 5 ? 50 : 200);
+        // }
         isChecking = false;
         return;
       }
@@ -464,7 +464,7 @@ if (!cordova) {
                 MAPS[mapId].refreshLayout();
             }
         });
-        setTimeout(putHtmlElements, 50);
+        // setTimeout(putHtmlElements, 50);
         isChecking = false;
       }, null, 'CordovaGoogleMaps', 'putHtmlElements', [finalDomPositions]);
       child = null;
@@ -513,10 +513,11 @@ if (!cordova) {
       }, 1000);
     });
 
-    document.addEventListener("deviceready", putHtmlElements, {
-      once: true
-    });
-    document.addEventListener("plugin_touch", resetTimer);
+    // document.addEventListener("deviceready", putHtmlElements, {
+    //   once: true
+    // });
+    // document.addEventListener("plugin_touch", resetTimer);
+    document.addEventListener("gm_force_dom_calculation", resetTimer);
     window.addEventListener("orientationchange", resetTimer);
 
     //----------------------------------------------------
