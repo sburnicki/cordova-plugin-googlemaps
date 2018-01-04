@@ -165,14 +165,24 @@ if (!cordova) {
       }
     }
 
+    var lastPutHtmlCall = 0;
+
     function putHtmlElements() {
       var mapIDs = Object.keys(MAPS);
+      if (!lastPutHtmlCall) {
+        console.log("putHtml: First call");
+      } else {
+        console.log("putHtml: " + (Date.now() - lastPutHtmlCall) + "ms elapsed");
+      }
+      lastPutHtmlCall = Date.now();
       if (isChecking) {
+        console.log("putHtml: " + (Date.now() - lastPutHtmlCall) + "ms exec time, still checking");
         return;
       }
       if (mapIDs.length === 0) {
         cordova_exec(null, null, 'CordovaGoogleMaps', 'pause', []);
         isSuspended = true;
+        console.log("putHtml: " + (Date.now() - lastPutHtmlCall) + "ms exec time, no maps");
         return;
       }
       if (isSuspended) {
@@ -203,6 +213,7 @@ if (!cordova) {
         //  setTimeout(putHtmlElements, 50);
         //}
         isChecking = false;
+        console.log("putHtml: " + (Date.now() - lastPutHtmlCall) + "ms exec time, no visible maps");
         return;
       }
       if (isSuspended) {
@@ -377,11 +388,13 @@ if (!cordova) {
           // setTimeout(putHtmlElements, idlingCnt < 5 ? 50 : 200);
         // }
         isChecking = false;
+        console.log("putHtml: " + (Date.now() - lastPutHtmlCall) + "ms exec time, idling: " + longIdlingCnt + " " + idlingCnt);
         return;
       }
       idlingCnt = 0;
       longIdlingCnt = 0;
 
+      console.log("putHtml: " + (Date.now() - lastPutHtmlCall) + "ms partial exec time, recalculating");
       // If the map div is not displayed (such as display='none'),
       // ignore the map temporally.
       var minMapDepth = 9999999;
@@ -457,6 +470,7 @@ if (!cordova) {
       //-----------------------------------------------------------------
       // Pass information to native
       //-----------------------------------------------------------------
+      console.log("putHtml: " + (Date.now() - lastPutHtmlCall) + "ms partial exec time, passing to native");
       cordova_exec(function() {
         prevDomPositions = domPositions;
         mapIDs.forEach(function(mapId) {
@@ -471,6 +485,7 @@ if (!cordova) {
       parentNode = null;
       elemId = null;
       children = null;
+      console.log("putHtml: " + (Date.now() - lastPutHtmlCall) + "ms exec time, completed");
     }
 
     // This is the special event that is fired by the google maps plugin
